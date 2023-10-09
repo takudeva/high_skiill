@@ -10,7 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_10_08_225409) do
+ActiveRecord::Schema.define(version: 2023_10_09_030052) do
+
+  create_table "chinese_characters", force: :cascade do |t|
+    t.string "chinese_character", null: false
+    t.string "reading_of_chinese_character", null: false
+    t.string "meaning_of_chinese_character", null: false
+    t.integer "level_of_chinese_character", default: 0, null: false
+    t.integer "number_for_each_level", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "corrects", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "chinese_character_id", null: false
+    t.boolean "correct_of_reading", default: false, null: false
+    t.boolean "correct_of_meaning", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -18,6 +37,14 @@ ActiveRecord::Schema.define(version: 2023_10_08_225409) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.string "last_name", null: false
+    t.string "first_name", null: false
+    t.string "last_name_kana", null: false
+    t.string "first_name_kana", null: false
+    t.string "nickname", null: false
+    t.boolean "is_deleated", default: false, null: false
+    t.integer "level", default: 0, null: false
+    t.integer "the_number_of_correct_answers", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
