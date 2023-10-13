@@ -1,2 +1,19 @@
-<h1>Homes#top</h1>
-<p>Find me in app/views/homes/top.html.erb</p>
+<div class="container">
+  <h3>問題一覧</h3>
+  <div class="row">
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <td>小学６年生</td>
+        </tr>
+        <tr>
+          <td>1-20</td>
+          <td><%= link_to "読み", question_path(@question.id, type: "read", group: 1, page: 1), class: "btn btn-primary" %>
+          </td>
+          <td><%= link_to "意味", question_path(@question.id, type: "mean", group: 1, page: 1), class: "btn btn-success" %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
