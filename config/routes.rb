@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       patch 'withdrawal'
     end
   end
-  resources :questions, only: [:index, :show] do
+  resources :questions, only: [:show]  do
     collection do
       post 'answer'
       get 'answer' => 'questions#result'

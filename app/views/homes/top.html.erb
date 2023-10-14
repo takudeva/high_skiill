@@ -8,9 +8,9 @@
         </tr>
         <tr>
           <td>1-20</td>
-          <td><%= link_to "読み", question_path(@question.id, type: "read", group: 1, page: 1), class: "btn btn-primary" %>
+          <td><%= link_to "読み", question_path(id: 0, type: "read", group: 1, page: 1), class: "btn btn-primary" %>
           </td>
-          <td><%= link_to "意味", question_path(@question.id, type: "mean", group: 1, page: 1), class: "btn btn-success" %>
+          <td><%= link_to "意味", question_path(id: 0, type: "mean", group: 1, page: 1), class: "btn btn-success" %>
           </td>
         </tr>
       </tbody>
