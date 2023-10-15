@@ -1,11 +1,23 @@
 <div class="container">
   <div class="row">
-    
+
   </div>
-  <% @questions.each do |question| %>
+  <%= form_with model: @correct, url: answer_questions_path, method: :post do |f| %>
+    <% @questions_with_choices.each do |qwc| %>
     <div class="row">
       <div class="col-2">
-        <%= question.chinese_character %>
+        <%= qwc[:question].chinese_character %>
       </div>
+      <% qwc[:choices].each do |choice| %>
+        <div class="col">
+          <%= f.radio_button :correct_of_reading, "false" %>
+          <%= f.label :correct_of_reading, choice.reading_of_chinese_character %>
+        </div>
+      <% end %>
     </div>
+    <% end %>
+    <div class="row">
+      <%= f.submit "変更を保存", class: "btn btn-primary col-2" %>
+    </div>
+  <% end %>
 </div>

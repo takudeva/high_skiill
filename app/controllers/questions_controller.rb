@@ -1,5 +1,6 @@
 class QuestionsController < ApplicationController
   def show
+    @correct = Correct.new
   # パラメータを受け取り、変数level,type,group,pageに代入する
     level = params[:level]
     type = params[:type]
@@ -26,9 +27,24 @@ class QuestionsController < ApplicationController
       return
     end
 
+    # 同じグループ内の20問の問題を5問ずつ、4ページに分けて表示
+    questions_per_page = 5
+    @total_pages = (questions_with_limited_num.count / questions_per_page.to_f).ceil
+    @current_page = page.to_i
+    offset = (page.to_i - 1) * questions_per_page
+
+    # ページが範囲外の場合はリダイレクト
+    if @current_page < 1 || @current_page > @total_pages
+      flash[:error] = "ページが存在しません。"
+      redirect_to root_path
+      return
+    end
     # questions_with_limited_numを、取得したid(level_of_chinese_character)に基づき、レベルも制限する
     # 制限された値をquestions_with_limited_num_and_levelに代入する
     questions_with_limited_num_and_level =  questions_with_limited_num.where(level_of_chinese_character: level, group: group)
+    # 以前のページで出題された問題を除外
+    previous_questions = session[:previous_questions] || []
+    questions_with_limited_num_and_level = questions_with_limited_num_and_level.where.not(id: previous_questions)
 
     #   page = [1, page, 4].sort[1]
     #   @questions = selected_mean_questions
@@ -51,18 +67,24 @@ class QuestionsController < ApplicationController
     # @questionsから無作為に(order("RANDOM()"))、5問のみ(limit)抽出して@question_setに代入する
     @question_set = @questions.order("RANDOM()").limit(5)
 
-
+    # まず、@questions_with_choicesに空の配列(箱)[]を代入する
+    # question_setに含まれるquestionそれぞれ(.each)に対し、choicesを用意する
+    # @questions_with_choicesにオブジェクト(値はquestion,choices)を追加する
+    # generate_choicesはprivateの中で定義する
+    # 出した問題のid(question.id)をsession[:question_history]配列に保存することで、回答履歴を保持する
     @questions_with_choices = []
     @question_set.each do |question|
-      # generate_choicesはprivateの中で定義する
       choices = generate_choices(question, type)
       @questions_with_choices << { question: question, choices: choices }
+      session[:previous_questions] << question.id
     end
 
-    @question_set.each do |question|
-      session[:question_history] << question.id
-    end
+  end
 
+  def answer
+    @correct = Correct.new(correct_params)
+    @correct.save
+    redirect_to answer_questions_path
   end
 
   def result
@@ -81,9 +103,14 @@ class QuestionsController < ApplicationController
                               .limit(3)
 
     # ラジオボタン用の選択肢を作成
+    # まず、answer_optionsの箱を作る[]、そこに、三項演算子を使ってreadとmeanの場合分けを行いながら、正解の選択肢(question.~)とそれ以外の選択肢(choice.~ <= choices)を追加する( << は箱(配列)[]への追加を意味する)
+    # 三項演算子とは、次のように一般化される
+    # (条件式 ? 真の場合 : 偽の場合)
     answer_options = []
     answer_options << (type == "read" ? question.reading_of_chinese_character : question.meaning_of_chinese_character)
-    choices.each { |choice| answer_options << (type == "read" ? choice.reading_of_chinese_character : choice.meaning_of_chinese_character) }
+    choices.each do |choice|
+      answer_options << (type == "read" ? choice.reading_of_chinese_character : choice.meaning_of_chinese_character)
+    end
     answer_options.shuffle!
     return answer_options
   end
