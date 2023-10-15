@@ -2,22 +2,43 @@
   <div class="row">
 
   </div>
-  <%= form_with model: @correct, url: answer_questions_path, method: :post do |f| %>
-    <% @questions_with_choices.each do |qwc| %>
-    <div class="row">
-      <div class="col-2">
-        <%= qwc[:question].chinese_character %>
-      </div>
-      <% qwc[:choices].each do |choice| %>
-        <div class="col">
-          <%= f.radio_button :correct_of_reading, "false" %>
-          <%= f.label :correct_of_reading, choice.reading_of_chinese_character %>
+  <%= form_with model: @correct, url: answer_questions_path(page: params[:page]), method: :post do |f| %>
+    <% if @type == "read" %>
+      <% @questions_with_choices.each_with_index do |qwc, index| %>
+      <div class="row mb-2">
+        <div class="col-2">
+          <%= qwc[:question].chinese_character %>
         </div>
+        <% qwc[:choices].each do |choice| %>
+          <div class="col">
+            <%= f.radio_button :correct_of_reading, "#{qwc[:question].id}_#{choice}", name: index  %>
+            <%= f.label :correct_of_reading, choice %>
+          </div>
+        <% end %>
+      </div>
       <% end %>
-    </div>
+      <div class="row justify-content-center">
+        <%= f.submit "解答する", class: "btn btn-primary col-2" %>
+      </div>
+    <% elsif @type == "mean" %>
+      <% @questions_with_choices.each_with_index do |qwc, index| %>
+      <div class="row">
+        <div class="col-2">
+          <%= qwc[:question].chinese_character %>
+        </div>
+      </div>
+      <div class="row">
+        <% qwc[:choices].each do |choice| %>
+          <div class="offset-1 col-10">
+            <%= f.radio_button :correct_of_meaning, "#{qwc[:question].id}_#{choice}", name: index  %>
+            <%= f.label :correct_of_meaning, choice %>
+          </div>
+        <% end %>
+      </div>
+      <% end %>
+      <div class="row">
+        <%= f.submit "解答する", class: "btn btn-success col-2" %>
+      </div>
     <% end %>
-    <div class="row">
-      <%= f.submit "変更を保存", class: "btn btn-primary col-2" %>
-    </div>
   <% end %>
 </div>
