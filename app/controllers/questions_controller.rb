@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
   def show
     @correct = Correct.new
+
   # パラメータを受け取り、変数level,type,group,pageに代入する
     @level = params[:level]
     @type = params[:type]
@@ -68,8 +69,35 @@ class QuestionsController < ApplicationController
   end
 
   def answer
-    @correct = Correct.new(correct_params)
-    @correct.save
+    @level = params[:level]
+    @type = params[:type]
+    if @type == "read"
+      # correct_of_readingとして取得した値("#{qwc[:question].id}_#{choice}")を"_"を境に切り離し、前者をquestion_idに、後者をselected_choiceに代入
+      # ChineseCharacterモデルからquestion_idと同じid、かつ、levelが受け取ったパラメータと同じものを探し、ローカル変数questionに代入
+      # correct_choiceにquestion_idとlevelが一致する読み(question.reading_of_chinese_character)を代入しておく
+      # selected_choice == correct_choiceかを判定 => 真の場合、is_correctに"true"代入、偽は"false"代入
+      # @correct.correct_of_readingにはis_correct => 真偽値が代入される
+      question_id, selected_choice = params[:correct_of_reading].split("_")
+      question = ChineseCharacter.find_by!(id: question_id, level_of_chinese_character: @level)
+      correct_choice = question.reading_of_chinese_character
+      correct_choice == selected_choice ? is_correct = "true" : is_correct = "false"
+      @correct = Correct.new(correct_of_reading: is_correct)
+    elsif @type == "mean"
+      question_id, selected_choice = params[:correct_of_reading].split("_")
+      question = ChineseCharacter.find_by!(id: question_id, level_of_chinese_character: @level)
+      correct_choice = question.meaning_of_chinese_character
+      correct_choice == selected_choice ? is_correct = "true" : is_correct = "false"
+      @correct = Correct.new(correct_of_meaning: is_correct)
+    end
+
+    # @correct.user_id = current_user.id # ログインユーザーのIDに適切な値を設定する
+
+    if @correct.save
+      flash[:success] = is_correct ? "正解です！" : "不正解です。"
+    else
+      flash[:error] = "解答を保存できませんでした。"
+    end
+
     redirect_to answer_questions_path
   end
 
@@ -104,7 +132,7 @@ class QuestionsController < ApplicationController
   end
 
   def correct_params
-    params.require(:corrects).permit(:correct_of_reading)
+    params.require(:correct).permit(:correct_of_reading, :correct_of_meaning)
   end
 
 end
