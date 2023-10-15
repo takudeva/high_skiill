@@ -71,6 +71,7 @@ class QuestionsController < ApplicationController
   def answer
     @level = params[:level]
     @type = params[:type]
+    @correct = Correct.new
     if @type == "read"
       # correct_of_readingとして取得した値("#{qwc[:question].id}_#{choice}")を"_"を境に切り離し、前者をquestion_idに、後者をselected_choiceに代入
       # ChineseCharacterモデルからquestion_idと同じid、かつ、levelが受け取ったパラメータと同じものを探し、ローカル変数questionに代入
@@ -81,17 +82,16 @@ class QuestionsController < ApplicationController
       question = ChineseCharacter.find_by!(id: question_id, level_of_chinese_character: @level)
       correct_choice = question.reading_of_chinese_character
       correct_choice == selected_choice ? is_correct = "true" : is_correct = "false"
-      @correct = Correct.new(correct_of_reading: is_correct)
+      @correct.correct_of_reading = is_correct
     elsif @type == "mean"
-      question_id, selected_choice = params[:correct_of_reading].split("_")
+      question_id, selected_choice = params[:correct_of_meaning].split("_")
       question = ChineseCharacter.find_by!(id: question_id, level_of_chinese_character: @level)
       correct_choice = question.meaning_of_chinese_character
       correct_choice == selected_choice ? is_correct = "true" : is_correct = "false"
-      @correct = Correct.new(correct_of_meaning: is_correct)
+      @correct.correct_of_meaning = is_correct
     end
 
     # @correct.user_id = current_user.id # ログインユーザーのIDに適切な値を設定する
-
     if @correct.save
       flash[:success] = is_correct ? "正解です！" : "不正解です。"
     else
@@ -132,7 +132,13 @@ class QuestionsController < ApplicationController
   end
 
   def correct_params
-    params.require(:correct).permit(:correct_of_reading, :correct_of_meaning)
+    if @type == "read"
+      params.require(:correct).permit(:correct_of_reading)
+    elsif @type == "mean"
+      params.require(:correct).permit(:correct_of_meaning)
+    else
+      # エラー処理を追加するか、デフォルトの設定を行います
+    end
   end
 
 end
