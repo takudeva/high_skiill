@@ -1,2 +1,29 @@
-<h1>Questions#result</h1>
-<p>Find me in app/views/questions/result.html.erb</p>
+<div class="container">
+    <% if @type == "read" %>
+      <div class="row mb-2">
+        <% @questions_with_choices.each do |qwc| %>
+          <div class="col-2">
+            <%= qwc[:question].chinese_character %>
+          </div>
+          <div class="col-2">
+            <%= qwc[:question].reading_of_chinese_character %>
+          </div>
+        <% end %>
+      </div>
+    <% elsif @type == "mean" %>
+        <% @questions_with_choices.each do |qwc| %>
+          <div class="col-2">
+            <%= qwc[:question].chinese_character %>
+          </div>
+          <div class="col-2">
+            <%= qwc[:question].meaning_of_chinese_character %>
+          </div>
+        <% end %>
+    <div class="row justify-content-center">
+      <% unless params[:page] == 4 %>
+        <%= link_to "解答する", questions_path(level: params[:level], type: params[:type], group: params[:group], page: params[:page] + 1 ) class: "btn btn-primary col-2" %>
+      <% else %>
+        <%= link_to "次の問題に進む", root_path, class: "btn btn-primary col-2" %>
+      <% end %>
+    </div>
+</div>

@@ -97,12 +97,11 @@ class QuestionsController < ApplicationController
     else
       flash[:error] = "解答を保存できませんでした。"
     end
-
     redirect_to answer_questions_path
   end
 
   def result
-    # 後でlink_toに追加します(page: params[:page] + 1)
+    @type = params[:type]
   end
 
   def score

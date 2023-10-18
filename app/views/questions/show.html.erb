@@ -2,7 +2,7 @@
   <div class="row">
 
   </div>
-  <%= form_with model: @correct, url: answer_questions_path(page: params[:page]), method: :post do |f| %>
+  <%= form_with model: @correct, url: answer_questions_path(level: params[:level], type: params[:type], group: params[:group], page: params[:page]), method: :post do |f| %>
     <% if @type == "read" %>
       <% @questions_with_choices.each_with_index do |qwc, index| %>
       <div class="row mb-2">
