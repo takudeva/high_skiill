@@ -3,42 +3,35 @@
 
   </div>
   <%= form_with url: answer_questions_path(level: params[:level], type: params[:type], group: params[:group], page: params[:page]), method: :post do |f| %>
-    <% if @type == "read" %>
       <% @questions_with_choices.each_with_index do |qwc, index| %>
       <div class="row mb-2">
         <div class="col-2">
           <%= qwc[:question].chinese_character %>
+          <%= f.hidden_field "chinese_character_of_question[]", value: "#{qwc[:question].number_for_each_level}" %>
         </div>
         <% qwc[:choices].each do |choice| %>
-          <div class="col">
-            <%= f.radio_button :correct_of_reading, "#{qwc[:question].id}_#{choice}", name: index  %>
-            <%= f.label :correct_of_reading, choice %>
-          </div>
+        <% choice_id = ChineseCharacter.find_by(reading_of_chinese_character: choice).id %>
+          <% if @type == "read" %>
+            <div class="col">
+
+              <%= f.radio_button :correct_of_reading, "#{choice_id}_#{choice}", name: index  %>
+              <%= f.label :correct_of_reading, choice %>
+            </div>
+          <% elsif @type == "mean" %>
+            <div class="offset-1 col-10">
+              <%= f.radio_button :correct_of_meaning, "#{qwc[:question].id}_#{choice}", name: index  %>
+              <%= f.label :correct_of_meaning, choice %>
+            </div>
+          <% end %>
         <% end %>
       </div>
       <% end %>
       <div class="row justify-content-center">
+      <% if @type == "read" %>
         <%= f.submit "解答する", class: "btn btn-primary col-2" %>
-      </div>
-    <% elsif @type == "mean" %>
-      <% @questions_with_choices.each_with_index do |qwc, index| %>
-      <div class="row">
-        <div class="col-2">
-          <%= qwc[:question].chinese_character %>
-        </div>
-      </div>
-      <div class="row">
-        <% qwc[:choices].each do |choice| %>
-          <div class="offset-1 col-10">
-            <%= f.radio_button :correct_of_meaning, "#{qwc[:question].id}_#{choice}", name: index  %>
-            <%= f.label :correct_of_meaning, choice %>
-          </div>
-        <% end %>
-      </div>
-      <% end %>
-      <div class="row">
+      <% elsif @type == "mean" %>
         <%= f.submit "解答する", class: "btn btn-success col-2" %>
+      <% end %>
       </div>
-    <% end %>
   <% end %>
 </div>
