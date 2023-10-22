@@ -15,31 +15,37 @@ class QuestionsController < ApplicationController
   end
 
   def answer
-    level = params[:level]
-    type = params[:type]
+    valid_params = (0..4).all? { |i| params[i.to_s].present? }
+    if valid_params
 
-    @answers = []
-    [0,1,2,3,4].each do |i|
-      # fix_me  選択されていないラジオボタンがある時のエラー
-      # redirect_to root_path and return if blank?
-      question_chinese_character_id = params[:question_chinese_character_id][i]
-      selected_id, selected_choice = params[i.to_s].split("_")
-      question = ChineseCharacter.find_by!(id: question_chinese_character_id)
-      correct = Correct.new
-      correct.user_id = current_user.id
-      correct.chinese_character_id = question.id
-      if type == "read"
-        question_chinese_character_id == selected_id ? is_correct = "true" : is_correct = "false"
-        correct.correct_of_reading = is_correct
-      elsif type == "mean"
-        question_chinese_character_id == selected_id  ? is_correct = "true" : is_correct = "false"
-        correct.correct_of_meaning = is_correct
+      level = params[:level]
+      type = params[:type]
+
+      @answers = []
+      [0,1,2,3,4].each do |i|
+        # fix_me  選択されていないラジオボタンがある時のエラー
+        # redirect_to root_path and return if blank?
+        question_chinese_character_id = params[:question_chinese_character_id][i]
+        selected_id, selected_choice = params[i.to_s].split("_")
+        question = ChineseCharacter.find_by!(id: question_chinese_character_id)
+        correct = Correct.new
+        correct.user_id = current_user.id
+        correct.chinese_character_id = question.id
+        if type == "read"
+          question_chinese_character_id == selected_id ? is_correct = "true" : is_correct = "false"
+          correct.correct_of_reading = is_correct
+        elsif type == "mean"
+          question_chinese_character_id == selected_id  ? is_correct = "true" : is_correct = "false"
+          correct.correct_of_meaning = is_correct
+        end
+        correct.save!
+        @answers << correct
       end
-      correct.save!
-      @answers << correct
+      flash[:success] = "解答しました"
+      result
+    else
+      redirect_to root_path
     end
-    flash[:success] = "解答しました"
-    result
   end
 
   def result
@@ -55,12 +61,11 @@ class QuestionsController < ApplicationController
   def score
     @type = params[:type]
     if @type == "read"
-      @count_of_corrects = @answers.count { |correct| correct.correct_of_reading == true }
+      @count_of_corrects = Correct.where(user_id: current_user.id).last(20).count { |correct| correct.correct_of_reading == true }
     elsif @type == "mean"
-      @count_of_corrects = @answers.count { |correct| correct.correct_of_meaning == true }
+      @count_of_corrects = Correct.where(user_id: current_user.id).last(20).count { |correct| correct.correct_of_meaning == true }
     end
   end
-
   private
   def generate_quiz(group, page, level, type)
     previous_questions = session[:previous_questions] || [] # セッション内に保持されている問題番号取得(1)
