@@ -1,11 +1,15 @@
 class QuestionsController < ApplicationController
 
   def show
-  # パラメータを受け取り、変数level,type,group,pageに代入する
+    session[:previous_questions] = [] if params[:page].to_i <= 1 # 1ページ目の時、過去問セッションをクリア
     level = params[:level]
     type = params[:type]
     group = params[:group]
     page = params[:page]
+
+    # 引数が不足している場合のエラー処理
+    redirect_to root_path and return if level.blank? || type.blank? || group.blank? || page.blank?
+
     generate_quiz(group, page, level, type)
     @type = type
   end
@@ -13,40 +17,29 @@ class QuestionsController < ApplicationController
   def answer
     level = params[:level]
     type = params[:type]
-      # indexとして取得した値("#{qwc[:question].id}_#{choice}")を5問分("0"-"4")、"_"を境に切り離し、前者をquestion_idに、後者をselected_choiceに代入
-      # ChineseCharacterモデルからquestion_idと同じid、かつ、levelが受け取ったパラメータと同じものを探し、ローカル変数questionに代入
-      # correct_choiceにquestion_idとlevelが一致する読み(question.reading_of_chinese_character)を代入しておく
-      # selected_choice == correct_choiceかを判定 => 真の場合、is_correctに"true"代入、偽は"false"代入
-      # @correct.correct_of_readingにはis_correct => 真偽値が代入される
-    @answers =[]
+
+    @answers = []
     [0,1,2,3,4].each do |i|
-      correct = Correct.new
-      question_id = params[:chinese_character_of_question][i]
+      # fix_me  選択されていないラジオボタンがある時のエラー
+      # redirect_to root_path and return if blank?
+      question_chinese_character_id = params[:question_chinese_character_id][i]
       selected_id, selected_choice = params[i.to_s].split("_")
-      question = ChineseCharacter.find_by!(id: question_id, level_of_chinese_character: level)
-      if type == "read"
-        #correct_choice = question.reading_of_chinese_character
-        question_id == selected_id ? is_correct = "true" : is_correct = "false"
-        correct.correct_of_reading = is_correct
-      elsif type == "mean"
-        #correct_choice = question.meaning_of_chinese_character
-        question_id == selected_id  ? is_correct = "true" : is_correct = "false"
-        correct.correct_of_meaning = is_correct
-      end
+      question = ChineseCharacter.find_by!(id: question_chinese_character_id)
+      correct = Correct.new
       correct.user_id = current_user.id
       correct.chinese_character_id = question.id
+      if type == "read"
+        question_chinese_character_id == selected_id ? is_correct = "true" : is_correct = "false"
+        correct.correct_of_reading = is_correct
+      elsif type == "mean"
+        question_chinese_character_id == selected_id  ? is_correct = "true" : is_correct = "false"
+        correct.correct_of_meaning = is_correct
+      end
       correct.save!
       @answers << correct
     end
     flash[:success] = "解答しました"
     result
-    #@answer.each do | answer |
-    #  pp answer
-    #  pp answer.chinese_character.chinese_character
-    #  pp answer.correct_of_reading
-    #end
-    #redirect_to answer_questions_path
-
   end
 
   def result
@@ -54,24 +47,33 @@ class QuestionsController < ApplicationController
     type = params[:type]
     group = params[:group]
     page = params[:page]
-    #generate_quiz(group, page, level, type)
     @type = type
+    redirect_to root_path, notice: "不正な操作です。" and return if @answers.blank?
     render :result
   end
 
   def score
+    @type = params[:type]
+    if @type == "read"
+      @count_of_corrects = @answers.count { |correct| correct.correct_of_reading == true }
+    elsif @type == "mean"
+      @count_of_corrects = @answers.count { |correct| correct.correct_of_meaning == true }
+    end
   end
 
   private
   def generate_quiz(group, page, level, type)
+    previous_questions = session[:previous_questions] || [] # セッション内に保持されている問題番号取得(1)
 
     questions_with_limited_num = []
+
+    # where.notで、(1)に含まれない問題の取得
     if group.to_i == 1
-      questions_with_limited_num = ChineseCharacter.where(number_for_each_level: 1..20)
+      questions_with_limited_num = ChineseCharacter.where(number_for_each_level: 1..20).where.not(id: previous_questions)
     elsif group.to_i == 2
-      questions_with_limited_num = ChineseCharacter.where(number_for_each_level: 21..40)
+      questions_with_limited_num = ChineseCharacter.where(number_for_each_level: 21..40).where.not(id: previous_questions)
     elsif group.to_i == 3
-      questions_with_limited_num = ChineseCharacter.where(number_for_each_level: 41..60)
+      questions_with_limited_num = ChineseCharacter.where(number_for_each_level: 41..60).where.not(id: previous_questions)
     else
       flash[:error] = "有効なパラメータではありません。"
     end
@@ -84,7 +86,8 @@ class QuestionsController < ApplicationController
       flash[:error] = "ページが存在しません。"
     end
 
-    previous_questions = session[:previous_questions] || []
+    # TODO: RAND()とRANDOM()でデプロイ後DB違いでエラー発生する想定
+    # ref: https://taitan916.info/blog/archives/2486
     questions_with_limited_num_and_level = questions_with_limited_num.where(level_of_chinese_character: level)
     question_set = questions_with_limited_num_and_level.order("RANDOM()").limit(5)
     @questions_with_choices = []

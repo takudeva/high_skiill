@@ -1,23 +1,44 @@
 <div class="container">
-  <div class="row mb-2">
-    <% @answers.each do |answer| %>
-      <div class="col-2">
-        <%= answer.chinese_character.chinese_character %>
-      </div>
-      <div class="col">
-      <% if @type == "read" %>
-        <%= answer.correct_of_reading %>
-      <% elsif @type == "mean" %>
-        <%= answer.correct_of_meaning %>
+  <div class="text-success"><%= flash[:success] %></div>
+  <div class="row my-3"></div>
+  <% @answers.each do |answer| %>
+  <div class="row mb-3 justify-content-center">
+  <% if @type == "read" %>
+    <div class="col-1">
+      <% if answer.correct_of_reading == true %>
+        <i class="fa-regular fa-circle" style="color: #f20707;"></i>
+      <% else %>
+        <i class="fa-solid fa-xmark" style="color: #095ef1;"></i>
       <% end %>
-      </div>
-    <% end %>
+    </div>
+    <div class="col-2">
+      <%= answer.chinese_character.chinese_character %>
+    </div>
+    <div class="col-2">
+      <%= answer.chinese_character.reading_of_chinese_character %>
+    </div>
+  <% elsif @type == "mean" %>
+    <div class="col-1">
+      <% if answer.correct_of_meaning == true %>
+        <i class="fa-regular fa-circle" style="color: #f20707;"></i>
+      <% else %>
+        <i class="fa-solid fa-xmark" style="color: #095ef1;"></i>
+      <% end %>
+    </div>
+    <div class="col-2">
+      <%= answer.chinese_character.chinese_character %>
+    </div>
+    <div class="col-2">
+      <%= answer.chinese_character.meaning_of_chinese_character %>
+    </div>
+  <% end %>
   </div>
+  <% end %>
   <div class="row justify-content-center">
-    <% unless params[:page] == 4 %>
-      <%#= link_to "結果を確認する", questions_path(level: params[:level], type: params[:type], group: params[:group], page: params[:page] + 1 ), class: "btn btn-primary col-2" %>
+    <% unless params[:page].to_i == 4 %>
+      <%= link_to "次の問題に進む", questions_path(level: params[:level], type: params[:type], group: params[:group], page: params[:page].to_i + 1), class: "btn btn-primary col-2" %>
     <% else %>
-      <%= link_to "次の問題に進む", root_path, class: "btn btn-primary col-2" %>
+      <%= link_to "結果を確認する", score_questions_path(type: params[:type]), class: "btn btn-primary col-2" %>
     <% end %>
   </div>
 </div>
