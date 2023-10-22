@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
   def my_page
-    @user = User.find(current_user.id)
+    @user = current_user
+    @count_all_chinese_characters = ChineseCharacter.count
+    @count_of_corrects = Correct.count { |correct| correct.correct_of_reading == true && correct.correct_of_meaning == true }
+    @count_all_users = User.count
+    @rank_of_current_user = User.where("count_of_corrects > ?", @count_of_corrects).count + 1
   end
 
   def edit
