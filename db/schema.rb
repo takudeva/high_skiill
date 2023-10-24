@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 2023_10_09_030052) do
     t.string "chinese_character", null: false
     t.string "reading_of_chinese_character", null: false
     t.string "meaning_of_chinese_character", null: false
-    t.integer "level_of_chinese_character", default: 0, null: false
+    t.integer "level_of_chinese_character", null: false
     t.integer "number_for_each_level", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -25,8 +25,9 @@ ActiveRecord::Schema.define(version: 2023_10_09_030052) do
   create_table "corrects", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "chinese_character_id", null: false
-    t.boolean "correct_of_reading", default: false, null: false
-    t.boolean "correct_of_meaning", default: false, null: false
+    t.integer "type", null: false
+    t.boolean "correct_of_reading"
+    t.boolean "correct_of_meaning"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

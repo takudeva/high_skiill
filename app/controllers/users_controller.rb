@@ -1,10 +1,22 @@
 class UsersController < ApplicationController
   def my_page
     @user = current_user
+    @user.the_number_of_correct_answers = Correct.count { |correct| correct.correct_of_reading == true && correct.correct_of_meaning == true }
+
     @count_all_chinese_characters = ChineseCharacter.count
-    @count_of_corrects = Correct.count { |correct| correct.correct_of_reading == true && correct.correct_of_meaning == true }
+    @rank_of_current_user = User.where("the_number_of_correct_answers > ?", @user.the_number_of_correct_answers).count + 1
     @count_all_users = User.count
-    @rank_of_current_user = User.where("count_of_corrects > ?", @count_of_corrects).count + 1
+
+    (0..4).each do |level|
+      Correct.where(correct_of_reading: true, correct_of_meaning: true)
+      correct_set_level = ChineseCharacter.where(level_of_chinese_character: level).pluck(:chinese_character_id)
+      User.all.each do |user|
+        if correct_set_level.all? { |ch_id| user.corrects.find_by(chinese_character_id: ch_id)&.correct_of_reading && user.corrects.find_by(chinese_character_id: ch_id)&.correct_of_meaning }
+          user.update(level: level)
+        end
+      end
+    end
+
   end
 
   def edit

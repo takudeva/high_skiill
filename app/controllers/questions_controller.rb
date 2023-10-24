@@ -28,13 +28,13 @@ class QuestionsController < ApplicationController
         question_chinese_character_id = params[:question_chinese_character_id][i]
         selected_id, selected_choice = params[i.to_s].split("_")
         question = ChineseCharacter.find_by!(id: question_chinese_character_id)
-        correct = Correct.new
+        correct = Correct.new(correct_params)
         correct.user_id = current_user.id
         correct.chinese_character_id = question.id
-        if type == "read"
+        if type.to_i == 1
           question_chinese_character_id == selected_id ? is_correct = "true" : is_correct = "false"
           correct.correct_of_reading = is_correct
-        elsif type == "mean"
+        elsif type.to_i == 2
           question_chinese_character_id == selected_id  ? is_correct = "true" : is_correct = "false"
           correct.correct_of_meaning = is_correct
         end
@@ -60,9 +60,9 @@ class QuestionsController < ApplicationController
 
   def score
     @type = params[:type]
-    if @type == "read"
+    if @type.to_i == 1
       @count_of_corrects = Correct.where(user_id: current_user.id).last(20).count { |correct| correct.correct_of_reading == true }
-    elsif @type == "mean"
+    elsif @type.to_i == 2
       @count_of_corrects = Correct.where(user_id: current_user.id).last(20).count { |correct| correct.correct_of_meaning == true }
     end
   end
@@ -109,12 +109,16 @@ class QuestionsController < ApplicationController
                               .order("RANDOM()")
                               .limit(3)
     answer_options = []
-    answer_options << (type == "read" ? question.reading_of_chinese_character : question.meaning_of_chinese_character)
+    answer_options << (type.to_i == 1 ? question.reading_of_chinese_character : question.meaning_of_chinese_character)
     choices.each do |choice|
-      answer_options << (type == "read" ? choice.reading_of_chinese_character : choice.meaning_of_chinese_character)
+      answer_options << (type.to_i == 2 ? choice.reading_of_chinese_character : choice.meaning_of_chinese_character)
     end
     answer_options.shuffle!
     return answer_options
+  end
+
+  def correct_params
+    params.require(:correct).permit(:type)
   end
 
 end

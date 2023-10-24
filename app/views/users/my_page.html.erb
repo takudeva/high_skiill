@@ -30,24 +30,52 @@
       </div>
     </div>
     <div class="col">
+      <div class="row mb-3">
+        <span class="font-weight-bold col-1">習熟度</span>
+      </div>
       <div class="row">
         <table class="table table-bordered">
           <tbody>
             <tr>
-              <td>氏名</td>
-              <td><%= @user.last_name %> <%= @user.first_name %></td>
+              <td>読み</td>
+              <td>
+                <span class="text-danger">
+                  <%= @user.last_name %>級
+                </span>
+              </td>
             </tr>
             <tr>
-              <td>カナ</td>
-              <td><%= @user.last_name_kana %> <%= @user.first_name_kana %></td>
+              <td>意味</td>
+              <td>
+                <span class="text-danger">
+                  <%= @user.last_name %>級
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row mb-3">
+        <span class="font-weight-bold col-1">ランキング</span>
+      </div>
+      <div class="row">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>
+                <%= @rank_of_current_user %>位
+              </td>
+              <td>
+                <%= @count_all_users %>人中
+              </td>
             </tr>
             <tr>
-              <td>ニックネーム</td>
-              <td><%= @user.nickname %></td>
-            </tr>
-            <tr>
-              <td>メールアドレス</td>
-              <td><%= @user.email %></td>
+              <td>
+                <%= @user.the_number_of_correct_answers %>問正解
+              </td>
+              <td>
+                <%= @count_all_chinese_characters %>問中
+              </td>
             </tr>
           </tbody>
         </table>
