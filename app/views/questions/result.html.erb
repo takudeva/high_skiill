@@ -3,7 +3,7 @@
   <div class="row my-3"></div>
   <% @answers.each do |answer| %>
   <div class="row mb-3 justify-content-center">
-  <% if @type == "read" %>
+  <% if @type.to_i == 1 %>
     <div class="col-1">
       <% if answer.correct_of_reading == true %>
         <i class="fa-regular fa-circle" style="color: #f20707;"></i>
@@ -17,7 +17,7 @@
     <div class="col-2">
       <%= answer.chinese_character.reading_of_chinese_character %>
     </div>
-  <% elsif @type == "mean" %>
+  <% elsif @type.to_i == 2 %>
     <div class="col-1">
       <% if answer.correct_of_meaning == true %>
         <i class="fa-regular fa-circle" style="color: #f20707;"></i>

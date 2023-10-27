@@ -9,7 +9,6 @@
         </div>
         <% qwc[:choices].each do |choice| %>
           <% if @type.to_i == 1 %>
-            <%= f.hidden_field :type, value: 1 %>
             <% choice_id = ChineseCharacter.find_by(reading_of_chinese_character: choice).id %>
             <div class="col">
               <%= f.label "correct_of_reading_#{choice_id}_#{choice}_#{qwc[:question].id}".to_sym do %>
@@ -18,7 +17,6 @@
               <% end %>
             </div>
           <% elsif @type.to_i == 2 %>
-            <%= f.hidden_field :type, value: 2 %>
             <% choice_id = ChineseCharacter.find_by(meaning_of_chinese_character: choice).id %>
             <div class="offset-1 col-10">
               <%= f.label "correct_of_meaning_#{choice_id}_#{choice}_#{qwc[:question].id}".to_sym do %>
@@ -31,9 +29,9 @@
       </div>
       <% end %>
       <div class="row justify-content-center">
-      <% if @type == "read" %>
+      <% if @type.to_i == 1 %>
         <%= f.submit "解答する", class: "btn btn-primary col-2" %>
-      <% elsif @type == "mean" %>
+      <% elsif @type.to_i == 2 %>
         <%= f.submit "解答する", class: "btn btn-success col-2" %>
       <% end %>
       </div>

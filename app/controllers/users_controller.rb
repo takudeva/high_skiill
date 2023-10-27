@@ -1,6 +1,12 @@
 class UsersController < ApplicationController
   def my_page
     @user = current_user
+    
+    read_corrects_chinese_characters = Correct.where(user_id: @user.id, type: 1, correct_of_reading: true).pluck(:chinese_character_id)
+    Correct.where(chinese_character_id: read_corrects_chinese_characters).each do
+      
+    end
+
     @user.the_number_of_correct_answers = Correct.count { |correct| correct.correct_of_reading == true && correct.correct_of_meaning == true }
 
     @count_all_chinese_characters = ChineseCharacter.count
