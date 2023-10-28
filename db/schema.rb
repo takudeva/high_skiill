@@ -44,7 +44,8 @@ ActiveRecord::Schema.define(version: 2023_10_09_030052) do
     t.string "first_name_kana", null: false
     t.string "nickname", null: false
     t.boolean "is_deleated", default: false, null: false
-    t.integer "level", default: 0, null: false
+    t.integer "read_level", default: 0, null: false
+    t.integer "mean_level", default: 0, null: false
     t.integer "the_number_of_correct_answers", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

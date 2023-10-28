@@ -308,7 +308,19 @@ chinese_characters_data = [
   { chinese_character: '蜻蛉', reading_of_chinese_character: 'とんぼ', meaning_of_chinese_character: 'トンボ目に属する昆虫の総称', level_of_chinese_character: 4, number_for_each_level: 60 }
 ]
 
-
 chinese_characters_data.each do |data|
   ChineseCharacter.create!(data)
+end
+
+10.times do |n|
+  User.create!(
+    # n + 1で数字が重複しないようにする
+    last_name: "利用者#{n + 1}",
+    first_name: "試験的#{n + 1}",
+    last_name_kana: "ユーザー#{n + 1}",
+    first_name_kana: "テスト#{n + 1}",
+    nickname: "テスター#{n + 1}",
+    email: "test#{n + 1}@test",
+    password: "testhoge"
+    )
 end

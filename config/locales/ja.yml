@@ -7,6 +7,21 @@ ja:
         second_year_junior_high_school_student: "中学２年生"
         third_year_junior_high_school_student: "中学３年生"
         first_year_high_school_student: "高校１年生"
+    user:
+      read_level:
+        none: "未登録"
+        sixth_grade_elementary_school_student: "小学６年生"
+        first_year_junior_high_school_student: "中学１年生"
+        second_year_junior_high_school_student: "中学２年生"
+        third_year_junior_high_school_student: "中学３年生"
+        first_year_high_school_student: "高校１年生"
+      mean_level:
+        none: "未登録"
+        sixth_grade_elementary_school_student: "小学６年生"
+        first_year_junior_high_school_student: "中学１年生"
+        second_year_junior_high_school_student: "中学２年生"
+        third_year_junior_high_school_student: "中学３年生"
+        first_year_high_school_student: "高校１年生"
   activerecord:
     errors:
       messages:

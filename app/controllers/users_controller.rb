@@ -1,7 +1,15 @@
 class UsersController < ApplicationController
   def my_page
-    @user = current_user
 
+    @user = User.find(current_user.id)
+
+    [0..4].each do |level|
+    chinese_character_id_for_each_level = ChineseCharacter.where(level_of_chinese_character: level).pluck(:id)
+      if Correct.where(user_id: @user.id, chinese_character_id: chinese_character_id_for_each_level, type: 1).group(:chinese_character_id).having("correct_of_reading == true").count > 50
+        @user.read_level = level
+      end
+    end
+    
     corrects = []
     chinese_character_id_answered_by_current_user = Correct.where(user_id: @user.id).order(chinese_character_id: "ASC").pluck(:chinese_character_id).uniq
     chinese_character_id_answered_by_current_user.each do |num|
@@ -12,18 +20,9 @@ class UsersController < ApplicationController
     @user.the_number_of_correct_answers = corrects.count(1)
 
     @count_all_chinese_characters = ChineseCharacter.count
+
     @rank_of_current_user = User.where("the_number_of_correct_answers > ?", @user.the_number_of_correct_answers).count + 1
     @count_all_users = User.count
-
-    (0..4).each do |level|
-      Correct.where(correct_of_reading: true, correct_of_meaning: true)
-      correct_set_level = ChineseCharacter.where(level_of_chinese_character: level).pluck(:chinese_character_id)
-      User.all.each do |user|
-        if correct_set_level.all? { |ch_id| user.corrects.find_by(chinese_character_id: ch_id)&.correct_of_reading && user.corrects.find_by(chinese_character_id: ch_id)&.correct_of_meaning }
-          user.update(level: level)
-        end
-      end
-    end
 
   end
 
