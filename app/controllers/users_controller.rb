@@ -1,13 +1,15 @@
 class UsersController < ApplicationController
   def my_page
     @user = current_user
-    
-    read_corrects_chinese_characters = Correct.where(user_id: @user.id, type: 1, correct_of_reading: true).pluck(:chinese_character_id)
-    Correct.where(chinese_character_id: read_corrects_chinese_characters).each do
-      
-    end
 
-    @user.the_number_of_correct_answers = Correct.count { |correct| correct.correct_of_reading == true && correct.correct_of_meaning == true }
+    corrects = []
+    chinese_character_id_answered_by_current_user = Correct.where(user_id: @user.id).order(chinese_character_id: "ASC").pluck(:chinese_character_id).uniq
+    chinese_character_id_answered_by_current_user.each do |num|
+      last_read_correct = Correct.where(chinese_character_id: num, type: 1).last
+      last_mean_correct = Correct.where(chinese_character_id: num, type: 2).last
+      last_read_correct.correct_of_reading == true && last_mean_correct.correct_of_meaning == true ? corrects << 1 : corrects << 0
+    end
+    @user.the_number_of_correct_answers = corrects.count(1)
 
     @count_all_chinese_characters = ChineseCharacter.count
     @rank_of_current_user = User.where("the_number_of_correct_answers > ?", @user.the_number_of_correct_answers).count + 1
