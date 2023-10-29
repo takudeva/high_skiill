@@ -19,8 +19,8 @@ class DeviseCreateUsers < ActiveRecord::Migration[6.1]
       t.string :first_name_kana, null: false
       t.string :nickname, null: false
       t.boolean :is_deleated, null: false, default: false
-      t.integer :read_level, null: false, default: 0
-      t.integer :mean_level, null: false, default: 0
+      t.integer :read_level, null: false, default: 5
+      t.integer :mean_level, null: false, default: 5
       t.integer :the_number_of_correct_answers, null: false, default: 0
 
       ## Trackable
