@@ -95,7 +95,7 @@ class QuestionsController < ApplicationController
     # TODO: RAND()とRANDOM()でデプロイ後DB違いでエラー発生する想定
     # ref: https://taitan916.info/blog/archives/2486
     questions_with_limited_num_and_level = questions_with_limited_num.where(level_of_chinese_character: level)
-    question_set = questions_with_limited_num_and_level.order("RANDOM()").limit(5)
+    question_set = questions_with_limited_num_and_level.order("RAND()").limit(5)
     @questions_with_choices = []
     question_set.each do |question|
       choices = generate_choices(question, type)
