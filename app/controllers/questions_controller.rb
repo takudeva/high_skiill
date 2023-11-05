@@ -107,7 +107,7 @@ class QuestionsController < ApplicationController
   def generate_choices(question, type)
     choices = ChineseCharacter.where(level_of_chinese_character: question.level_of_chinese_character)
                               .where.not(id: question.id)
-                              .order("RANDOM()")
+                              .order("RAND()")
                               .limit(3)
     answer_options = []
     answer_options << (type.to_i == 1 ? question.reading_of_chinese_character : question.meaning_of_chinese_character)
