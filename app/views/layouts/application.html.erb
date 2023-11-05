@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>HighSkill</title>
+    <title>HighSkiill</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -39,6 +39,9 @@
             <% else %>
             <div class="offset-1 col-8">
               <ul class="navbar-nav row flex-row justify-content-end mb-3">
+                <li class="nav-item col-2 border rounded px-2 mx-2 text-center">
+                  <%= link_to "Top", root_path, class: "text-dark" %>
+                </li>
                 <li class="nav-item col-2 border rounded px-2 mx-2 text-center">
                   <%= link_to "About", about_path, class: "text-dark" %>
                 </li>
