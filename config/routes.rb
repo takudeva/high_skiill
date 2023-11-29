@@ -16,13 +16,6 @@ Rails.application.routes.draw do
       get 'score'
     end
   end
-  # resources :reviews, only: [:index] do
-  #   collection do
-  #     get 'question'
-  #     post 'answer'
-  #     get 'answer' => 'reviews#result'
-  #   end
-  # end
   devise_for :users
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

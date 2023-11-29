@@ -2,26 +2,26 @@
   <h3>会員情報編集</h3>
   <%= form_with model: @user, url: users_path, method: :patch do |f| %>
     <div class="row mt-5 mb-2">
-      <span class="col-2">氏名</span>
-      <%= f.text_field :last_name, autocomplete: true, autofocus: true, class: "col-2" %>
-      <%= f.text_field :first_name, autocomplete: true, class: "col-2 ml-5" %>
+      <span class="col-sm-2">氏名</span>
+      <%= f.text_field :last_name, autocomplete: true, autofocus: true, class: "col-sm-2" %>
+      <%= f.text_field :first_name, autocomplete: true, class: "col-sm-2 ml-sm-5" %>
     </div>
     <div class="row mb-2">
-      <span class="col-2">フリガナ</span>
-      <%= f.text_field :last_name_kana, autocomplete: true, class: "col-2" %>
-      <%= f.text_field :first_name_kana, autocomplete: true, class: "col-2 ml-5" %>
+      <span class="col-sm-2">フリガナ</span>
+      <%= f.text_field :last_name_kana, autocomplete: true, class: "col-sm-2" %>
+      <%= f.text_field :first_name_kana, autocomplete: true, class: "col-sm-2 ml-sm-5" %>
     </div>
     <div class="row mb-2">
-      <span class="col-2">ニックネーム</span>
-      <%= f.text_field :nickname, autocomplete: true, class: "col-2" %>
+      <span class="col-sm-2">ニックネーム</span>
+      <%= f.text_field :nickname, autocomplete: true, class: "col-sm-2" %>
     </div>
     <div class="row mb-2">
-      <span class="col-2">メールアドレス</span>
-      <%= f.email_field :email, autocomplete: true, class: "col-2" %>
+      <span class="col-sm-2">メールアドレス</span>
+      <%= f.email_field :email, autocomplete: true, class: "col-sm-2" %>
     </div>
     <div class="row">
-      <%= f.submit "編集内容を保存", class: "offset-2 col-3 btn btn-success" %>
-      <%= link_to "退会する", confirm_users_path, class: "offset-1 col-1 btn btn-danger" %>
+      <%= f.submit "編集内容を保存", class: "offset-sm-2 col-sm-3 btn btn-success" %>
+      <%= link_to "退会する", confirm_users_path, class: "offset-sm-1 col-sm-1 btn btn-danger" %>
     </div>
   <% end %>
 </div>

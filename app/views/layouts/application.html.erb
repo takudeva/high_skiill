@@ -16,39 +16,39 @@
         <div class="container d-block">
           <div class="row">
 
-            <div class="col-3">
+            <div class="col-sm-3">
               <a class="navbar-brand text-dark mr-auto" href="/">
                 <span>HighSkiill!</span>
               </a>
             </div>
 
             <% if user_signed_in? %>
-            <div class="offset-1 col-8">
+            <div class="offset-sm-1 col-sm-8">
               <ul class="navbar-nav row flex-row justify-content-end mb-3">
-                <li class="nav-item col-2 border rounded px-2 mx-2 text-center">
+                <li class="nav-item col-sm-2 border rounded px-2 mx-2 text-center">
                   <%= link_to "マイページ", my_page_users_path, class: "text-dark" %>
                 </li>
-                <li class="nav-item col-2 border rounded px-2 mx-2 text-center">
+                <li class="nav-item col-sm-2 border rounded px-2 mx-2 text-center">
                   <%= link_to "問題一覧", root_path, class: "text-dark" %>
                 </li>
-                <li class="nav-item col-2 border rounded px-2 mx-2 text-center">
+                <li class="nav-item col-sm-2 border rounded px-2 mx-2 text-center">
                   <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "text-dark" %>
                 </li>
               </ul>
             </div>
             <% else %>
-            <div class="offset-1 col-8">
+            <div class="offset-sm-1 col-sm-8">
               <ul class="navbar-nav row flex-row justify-content-end mb-3">
-                <li class="nav-item col-2 border rounded px-2 mx-2 text-center">
+                <li class="nav-item col-sm-2 border rounded px-2 mx-2 text-center">
                   <%= link_to "Top", root_path, class: "text-dark" %>
                 </li>
-                <li class="nav-item col-2 border rounded px-2 mx-2 text-center">
+                <li class="nav-item col-sm-2 border rounded px-2 mx-2 text-center">
                   <%= link_to "About", about_path, class: "text-dark" %>
                 </li>
-                <li class="nav-item col-2 border rounded px-2 mx-2 text-center">
+                <li class="nav-item col-sm-2 border rounded px-2 mx-2 text-center">
                   <%= link_to "新規登録", new_user_registration_path, class: "text-dark" %>
                 </li>
-                <li class="nav-item col-2 border rounded px-2 mx-2 text-center">
+                <li class="nav-item col-sm-2 border rounded px-2 mx-2 text-center">
                   <%= link_to "ログイン", new_user_session_path, class: "text-dark" %>
                 </li>
               </ul>

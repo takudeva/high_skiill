@@ -1,23 +1,23 @@
 <div class="container mx-auto w-80">
   <h3>ログイン</h3>
-  <div class="row mt-2 mb-3 offset-1">
+  <div class="row mt-2 mb-3 offset-sm-1">
     <span>会員の方はこちらからログイン</span>
   </div>
   <%= form_with model: @user, url: user_session_path do |f| %>
     <div class="row mb-2 justify-content-center">
-      <%= f.label :email, "メールアドレス", class: "form-label col-form-label col-2" %>
-      <%= f.email_field :email, autofocus: true, class: "form-control col-6" %>
+      <%= f.label :email, "メールアドレス", class: "form-label col-form-label col-sm-2" %>
+      <%= f.email_field :email, autofocus: true, class: "form-control col-sm-6" %>
     </div>
 
     <div class="row mb-3 justify-content-center">
-      <%= f.label :password, "パスワード", class: "form-label col-form-label col-2" %>
-      <%= f.password_field :password, autocomplete: "current-password", class: "form-control col-6" %>
+      <%= f.label :password, "パスワード", class: "form-label col-form-label col-sm-2" %>
+      <%= f.password_field :password, autocomplete: "current-password", class: "form-control col-sm-6" %>
     </div>
     <div class="row mb-3">
-      <%= f.submit "ログイン", class: "btn btn-primary col-2 offset-4" %>
+      <%= f.submit "ログイン", class: "btn btn-primary col-sm-2 offset-sm-4" %>
     </div>
   <% end %>
-  <div class="row mt-3 mb-3 offset-1">
+  <div class="row mt-3 mb-3 offset-sm-1">
     <span>会員登録がお済みでない方は</span>
     <%= link_to "こちら", new_user_registration_path %>
     <span>から新規登録を行ってください。</span>

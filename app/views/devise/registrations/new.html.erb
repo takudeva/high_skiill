@@ -3,45 +3,45 @@
   <%= form_with model: @user, url: user_registration_path do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
     <div class="row mt-3 mb-1">
-      <span class="col-3">名前</span>
+      <span class="col-sm-3">名前</span>
       <%= f.label :last_name, "(姓)", class: "form-label col-form-label" %>
-      <%= f.text_field :last_name, autofocus: true, class: "form-control col-3" %>
+      <%= f.text_field :last_name, autofocus: true, class: "form-control col-sm-3" %>
       <%= f.label :first_name, "(名)", class: "form-label col-form-label" %>
-      <%= f.text_field :first_name, class: "form-control col-3" %>
+      <%= f.text_field :first_name, class: "form-control col-sm-3" %>
     </div>
     <div class="row mb-1">
-      <span class="col-3">フリガナ</span>
+      <span class="col-sm-3">フリガナ</span>
       <%= f.label :last_name_kana, "(セイ)", class: "form-label col-form-label" %>
-      <%= f.text_field :last_name_kana, class: "form-control col-3" %>
+      <%= f.text_field :last_name_kana, class: "form-control col-sm-3" %>
       <%= f.label :first_name_kana, "(メイ)", class: "form-label col-form-label" %>
-      <%= f.text_field :first_name_kana, class: "form-control col-3" %>
+      <%= f.text_field :first_name_kana, class: "form-control col-sm-3" %>
     </div>
     <div class="row mb-1">
-      <span class="col-3">ニックネーム</span>
-      <span class="col-3">
+      <span class="col-sm-3">ニックネーム</span>
+      <span class="col-sm-3">
         <%= f.text_field :nickname, class: "form-control" %>
       </span>
     </div>
     <div class="row mb-1">
-      <span class="col-3">メールアドレス</span>
-      <span class="col-3">
+      <span class="col-sm-3">メールアドレス</span>
+      <span class="col-sm-3">
         <%= f.email_field :email, class: "form-control" %>
       </span>
     </div>
     <div class="row mb-1">
-      <span class="col-3">パスワード(6文字以上)</span>
-      <span class="col-3">
+      <span class="col-sm-3">パスワード(6文字以上)</span>
+      <span class="col-sm-3">
         <%= f.password_field :password, class: "form-control" %>
       </span>
     </div>
     <div class="row mb-1">
-      <span class="col-3">パスワード(確認用)</span>
-      <span class="col-3">
+      <span class="col-sm-3">パスワード(確認用)</span>
+      <span class="col-sm-3">
         <%= f.password_field :password_confirmation, class: "form-control" %>
       </span>
     </div>
-    <div class="row mt-3 ml-2">
-      <%= f.submit "新規登録", class: "btn btn-success offset-3 col-2" %>
+    <div class="row mt-3 ml-sm-2">
+      <%= f.submit "新規登録", class: "btn btn-success offset-sm-3 col-sm-2" %>
     </div>
   <% end %>
   <p class="mt-3">
