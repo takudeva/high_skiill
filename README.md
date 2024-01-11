@@ -29,5 +29,4 @@
 - IDE：Cloud9
 ​
 ## 使用素材
-- chatGPT(https://chat.openai.com/) によって作成された文章
 - 実装機能リスト(https://docs.google.com/spreadsheets/d/1sgSUJYn6wsjvJDhjzPIL6p--dKNhulpzZCnTUy8GTLU/edit?usp=sharing)
